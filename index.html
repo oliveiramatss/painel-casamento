@@ -1041,8 +1041,10 @@ function openSyncModal(){
   showModal(`
     <h3>Sincronizar entre aparelhos</h3>
     <p style="font-size:13px;color:var(--muted);margin:0 0 14px;">
-      Cole aqui a configuração do seu projeto Firebase (gratuito) e escolha um código só seu.
-      Veja o passo a passo no README do site. Uma vez configurado neste aparelho, ele lembra sozinho.
+      Cole aqui a configuração do seu projeto Firebase (gratuito) — pode colar exatamente como
+      o Firebase mostrou, incluindo o <code>const firebaseConfig = ...</code> — e escolha um
+      código só seu. Veja o passo a passo no README do site. Uma vez configurado neste
+      aparelho, ele lembra sozinho.
     </p>
     <div class="field">
       <label>Configuração do Firebase (objeto firebaseConfig)</label>
@@ -1061,13 +1063,29 @@ function openSyncModal(){
     </div>
   `);
 }
+function parseFirebaseConfig(raw){
+  let text = raw.trim();
+  text = text.replace(/^(export\s+)?(const|let|var)\s+\w+\s*=\s*/,'');
+  text = text.replace(/;\s*$/,'');
+  try{
+    return JSON.parse(text);
+  }catch(e){
+    try{
+      return (new Function('return (' + text + ')'))();
+    }catch(e2){
+      return null;
+    }
+  }
+}
 window.handleConnect = function(){
   const raw = document.getElementById('f-fbconfig').value.trim();
   const code = document.getElementById('f-fbcode').value.trim();
   if(!raw || !code){ alert('Cole a configuração do Firebase e escolha um código.'); return; }
-  let parsed;
-  try{ parsed = JSON.parse(raw); }
-  catch(e){ alert('A configuração colada não é um JSON válido. Confira se copiou o objeto inteiro.'); return; }
+  const parsed = parseFirebaseConfig(raw);
+  if(!parsed || !parsed.apiKey || !parsed.projectId){
+    alert('Não consegui ler essa configuração. Cole o bloco inteiro que o Firebase mostrou, do jeito que ele veio (pode incluir "const firebaseConfig = ...").');
+    return;
+  }
   connectCloud(parsed, code, false);
   closeModal();
 };
