@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosso Casamento — Painel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#23281f;
+    --paper:#eef1e9;
+    --surface:#fbfaf5;
+    --lake:#16423c;
+    --lake-dim:#e3ece9;
+    --gold:#b8863b;
+    --gold-dim:#f3e6cd;
+    --rose:#a75461;
+    --rose-dim:#f4e2e2;
+    --muted:#6d7168;
+    --line:#d8d6c8;
+    --danger:#a83232;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    margin:0;
+  }
+  .app{
+    display:flex;
+    min-height:100vh;
+  }
+  /* ---------- sidebar ---------- */
+  .sidebar{
+    width:230px;
+    flex-shrink:0;
+    background:var(--lake);
+    color:#eef1e9;
+    padding:28px 18px;
+    display:flex;
+    flex-direction:column;
+    position:sticky;
+    top:0;
+    height:100vh;
+  }
+  .brand{
+    font-family:'Fraunces',serif;
+    font-size:21px;
+    line-height:1.25;
+    margin-bottom:4px;
+  }
+  .brand-sub{
+    font-size:12px;
+    color:#a9c2bd;
+    margin-bottom:26px;
+    letter-spacing:.02em;
+  }
+  .wave{
+    width:100%;
+    height:14px;
+    margin-bottom:22px;
+    opacity:.55;
+  }
+  nav{display:flex;flex-direction:column;gap:2px;flex:1;}
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border-radius:8px;
+    color:#d7e4e0;
+    font-size:14.5px;
+    cursor:pointer;
+    border:none;
+    background:transparent;
+    text-align:left;
+    width:100%;
+    font-family:'Work Sans',sans-serif;
+    transition:background .15s ease;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.08);}
+  .nav-item.active{background:#eef1e9;color:var(--lake);font-weight:600;}
+  .nav-icon{font-size:15px;width:18px;text-align:center;}
+  .sidebar-foot{
+    font-size:11.5px;
+    color:#7fa199;
+    line-height:1.5;
+    padding-top:16px;
+    border-top:1px solid rgba(255,255,255,.12);
+  }
+  /* ---------- main ---------- */
+  main{
+    flex:1;
+    padding:34px 42px 60px;
+    max-width:1080px;
+  }
+  .page-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:26px;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .page-title{font-size:26px;}
+  .page-sub{color:var(--muted);font-size:14px;margin-top:4px;}
+  .section{display:none;}
+  .section.active{display:block;}
+
+  /* ---------- dashboard hero ---------- */
+  .hero{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:30px 34px;
+    display:flex;
+    align-items:center;
+    gap:40px;
+    margin-bottom:22px;
+    flex-wrap:wrap;
+  }
+  .hero-count{font-size:64px;line-height:1;color:var(--lake);}
+  .hero-count-label{font-size:13px;color:var(--muted);margin-top:6px;}
+  .hero-meta{flex:1;min-width:220px;}
+  .hero-meta-row{display:flex;gap:8px;font-size:14px;margin-bottom:6px;color:var(--ink);}
+  .hero-meta-row b{color:var(--muted);font-weight:500;min-width:110px;}
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:14px;
+    margin-bottom:26px;
+  }
+  .stat-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 18px;
+  }
+  .stat-label{font-size:12.5px;color:var(--muted);margin-bottom:6px;}
+  .stat-value{font-size:22px;font-family:'Fraunces',serif;}
+  .stat-bar-track{height:6px;border-radius:4px;background:var(--paper);margin-top:10px;overflow:hidden;}
+  .stat-bar-fill{height:100%;border-radius:4px;background:var(--gold);}
+  .stat-bar-fill.lake{background:var(--lake);}
+  .stat-bar-fill.rose{background:var(--rose);}
+
+  .dash-columns{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;}
+  @media (max-width:820px){.dash-columns{grid-template-columns:1fr;}}
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:20px 22px;
+  }
+  .panel h3{font-size:16px;margin-bottom:14px;color:var(--lake);}
+  .task-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 0;
+    border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .task-row:last-child{border-bottom:none;}
+  .task-date{color:var(--muted);font-size:12px;min-width:78px;}
+  .task-name{flex:1;}
+  .tag{
+    display:inline-block;
+    font-size:11px;
+    padding:2px 8px;
+    border-radius:20px;
+    background:var(--gold-dim);
+    color:#7a5a1f;
+    margin-left:6px;
+  }
+  .tag.rose{background:var(--rose-dim);color:#7a3540;}
+  .tag.lake{background:var(--lake-dim);color:#0f332e;}
+
+  /* ---------- tables & forms ---------- */
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+  select, input[type=text], input[type=number], input[type=date]{
+    font-family:'Work Sans',sans-serif;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 10px;
+    font-size:13.5px;
+    background:var(--surface);
+    color:var(--ink);
+  }
+  input:focus, select:focus{outline:2px solid var(--lake-dim);outline-offset:1px;border-color:var(--lake);}
+  .btn{
+    border:1px solid var(--lake);
+    background:var(--lake);
+    color:#fff;
+    padding:8px 16px;
+    border-radius:8px;
+    font-size:13.5px;
+    cursor:pointer;
+    font-family:'Work Sans',sans-serif;
+    font-weight:500;
+  }
+  .btn:hover{background:#0f332e;}
+  .btn.ghost{background:transparent;color:var(--lake);}
+  .btn.ghost:hover{background:var(--lake-dim);}
+  .btn.small{padding:5px 10px;font-size:12px;border-radius:6px;}
+  .btn.danger{border-color:var(--danger);background:transparent;color:var(--danger);}
+  .btn.danger:hover{background:#f6e3e3;}
+
+  table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+  thead th{
+    text-align:left;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--muted);
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+    background:#f3f1e6;
+  }
+  tbody td{padding:10px 14px;font-size:13.5px;border-bottom:1px solid var(--line);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#f6f5ec;}
+  .num{text-align:right;font-variant-numeric:tabular-nums;}
+  .status-pill{
+    display:inline-block;
+    padding:3px 10px;
+    border-radius:20px;
+    font-size:11.5px;
+    font-weight:500;
+  }
+  .status-confirmado{background:#e3f0dc;color:#33622a;}
+  .status-pendente{background:var(--gold-dim);color:#7a5a1f;}
+  .status-recusado{background:#f4e2e2;color:#8a3535;}
+  .status-pago{background:#e3f0dc;color:#33622a;}
+  .status-parcial{background:var(--gold-dim);color:#7a5a1f;}
+  .status-aberto{background:#eee;color:#666;}
+  .row-actions{display:flex;gap:6px;}
+  .empty{padding:26px;text-align:center;color:var(--muted);font-size:13.5px;}
+
+  .modal-backdrop{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(35,40,31,.4);
+    align-items:center;justify-content:center;
+    z-index:50;
+    padding:20px;
+  }
+  .modal-backdrop.open{display:flex;}
+  .modal{
+    background:var(--surface);
+    border-radius:14px;
+    padding:26px 28px;
+    width:100%;
+    max-width:440px;
+    max-height:88vh;
+    overflow-y:auto;
+  }
+  .modal h3{margin-bottom:16px;color:var(--lake);}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px;}
+  .field input, .field select{width:100%;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .checkbox-row{display:flex;align-items:center;gap:8px;}
+  .checkbox-row input{width:16px;height:16px;}
+
+  .note{
+    background:var(--gold-dim);
+    border-radius:10px;
+    padding:12px 16px;
+    font-size:13px;
+    color:#5a441a;
+    margin-bottom:20px;
+  }
+  .save-flash{
+    position:fixed;
+    bottom:18px;right:18px;
+    background:var(--lake);
+    color:#fff;
+    padding:8px 16px;
+    border-radius:8px;
+    font-size:13px;
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity .2s ease, transform .2s ease;
+    pointer-events:none;
+    z-index:60;
+  }
+  .save-flash.show{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Nosso Casamento</div>
+    <div class="brand-sub" id="sidebar-date">13 de maio de 2028</div>
+    <svg class="wave" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M0,7 C20,0 40,14 60,7 C80,0 100,14 120,7 C140,0 160,14 180,7 C190,3 195,3 200,7" fill="none" stroke="#d7e4e0" stroke-width="1.4"/></svg>
+    <nav>
+      <button class="nav-item active" data-section="dashboard"><span class="nav-icon">&#9678;</span> Painel</button>
+      <button class="nav-item" data-section="orcamento"><span class="nav-icon">&#9783;</span> Orçamento</button>
+      <button class="nav-item" data-section="convidados"><span class="nav-icon">&#9825;</span> Convidados</button>
+      <button class="nav-item" data-section="fornecedores"><span class="nav-icon">&#9881;</span> Fornecedores</button>
+      <button class="nav-item" data-section="checklist"><span class="nav-icon">&#10003;</span> Checklist</button>
+    </nav>
+    <div class="sidebar-foot">
+      Canto da Lagoa · Buffet Indaiá
+      <div id="sync-status-line" style="margin-top:4px;">Dados salvos neste navegador</div>
+      <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+        <button class="btn ghost small" style="color:#eef1e9;border-color:rgba(255,255,255,.35);" id="btn-sync">Sincronizar</button>
+        <button class="btn ghost small" style="color:#eef1e9;border-color:rgba(255,255,255,.35);" id="btn-export">Backup .json</button>
+        <button class="btn ghost small" style="color:#eef1e9;border-color:rgba(255,255,255,.35);" id="btn-import">Importar</button>
+      </div>
+      <input type="file" id="file-import" accept="application/json" style="display:none;">
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- ================= DASHBOARD ================= -->
+    <section class="section active" id="sec-dashboard">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Painel geral</h1>
+          <div class="page-sub">Visão rápida do planejamento até o grande dia</div>
+        </div>
+      </div>
+
+      <div class="hero">
+        <div>
+          <div class="hero-count" id="countdown-days">—</div>
+          <div class="hero-count-label">dias até o casamento</div>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-meta-row"><b>Data</b> 13 de maio de 2028</div>
+          <div class="hero-meta-row"><b>Local</b> Canto da Lagoa — Buffet Indaiá</div>
+          <div class="hero-meta-row"><b>Limite</b> 50 pessoas no total (convidados + equipe presente, cláusula 2b)</div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Orçamento pago</div>
+          <div class="stat-value" id="dash-budget-paid">R$ 0</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill lake" id="dash-budget-bar" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">RSVP confirmados</div>
+          <div class="stat-value" id="dash-guests-confirmed">0 / 0</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill rose" id="dash-guests-bar" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Checklist concluído</div>
+          <div class="stat-value" id="dash-checklist-done">0 / 0</div>
+          <div class="stat-bar-track"><div class="stat-bar-fill" id="dash-checklist-bar" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Fornecedores fechados</div>
+          <div class="stat-value" id="dash-vendors">0 / 0</div>
+        </div>
+      </div>
+
+      <div class="dash-columns">
+        <div class="panel">
+          <h3>Próximas tarefas</h3>
+          <div id="dash-tasks"></div>
+        </div>
+        <div class="panel">
+          <h3>Prazos do contrato</h3>
+          <div id="dash-deadlines"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ORÇAMENTO ================= -->
+    <section class="section" id="sec-orcamento">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Orçamento</h1>
+          <div class="page-sub">Já preenchido com os valores do contrato do Buffet Indaiá — edite à vontade</div>
+        </div>
+        <button class="btn" id="btn-add-budget">+ Novo item</button>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total estimado</div>
+          <div class="stat-value" id="bud-total-est">R$ 0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total pago</div>
+          <div class="stat-value" id="bud-total-paid">R$ 0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Saldo em aberto</div>
+          <div class="stat-value" id="bud-total-open">R$ 0</div>
+        </div>
+      </div>
+
+      <table>
+        <thead><tr>
+          <th>Item</th><th>Categoria</th><th class="num">Estimado</th><th class="num">Pago</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody id="budget-tbody"></tbody>
+      </table>
+    </section>
+
+    <!-- ================= CONVIDADOS ================= -->
+    <section class="section" id="sec-convidados">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Convidados</h1>
+          <div class="page-sub">Contrato prevê 30 dias de prazo para confirmar a lista final ao buffet</div>
+        </div>
+        <button class="btn" id="btn-add-guest">+ Novo convidado</button>
+      </div>
+
+      <div class="note" id="guest-warning" style="display:none;"></div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">Total na lista</div><div class="stat-value" id="g-total">0</div></div>
+        <div class="stat-card"><div class="stat-label">Confirmados</div><div class="stat-value" id="g-confirmed">0</div></div>
+        <div class="stat-card"><div class="stat-label">Pendentes</div><div class="stat-value" id="g-pending">0</div></div>
+        <div class="stat-card"><div class="stat-label">Recusados</div><div class="stat-value" id="g-declined">0</div></div>
+        <div class="stat-card"><div class="stat-label">Total no limite de 50 (com equipe)</div><div class="stat-value" id="g-vs-limit">0 / 50</div></div>
+      </div>
+
+      <table>
+        <thead><tr>
+          <th>Nome</th><th>Grupo</th><th>Status</th><th>Mesa</th><th></th>
+        </tr></thead>
+        <tbody id="guests-tbody"></tbody>
+      </table>
+    </section>
+
+    <!-- ================= FORNECEDORES ================= -->
+    <section class="section" id="sec-fornecedores">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Fornecedores</h1>
+          <div class="page-sub">Buffet, decoração, fotografia, música e demais prestadores</div>
+        </div>
+        <button class="btn" id="btn-add-vendor">+ Novo fornecedor</button>
+      </div>
+      <div class="note">Fornecedores marcados como "presente no evento" (cerimonialista, assistentes, DJ etc.) entram automaticamente na conta do limite de 50 convidados do contrato — assim como manda a cláusula 2b.</div>
+      <table>
+        <thead><tr>
+          <th>Fornecedor</th><th>Categoria</th><th>Contato</th><th class="num">Valor</th><th>Status</th><th>No limite?</th><th></th>
+        </tr></thead>
+        <tbody id="vendors-tbody"></tbody>
+      </table>
+    </section>
+
+    <!-- ================= CHECKLIST ================= -->
+    <section class="section" id="sec-checklist">
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Checklist</h1>
+          <div class="page-sub">Inclui os prazos obrigatórios do contrato do buffet e marcos gerais do planejamento</div>
+        </div>
+        <button class="btn" id="btn-add-task">+ Nova tarefa</button>
+      </div>
+      <div id="checklist-list"></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal-content"></div>
+</div>
+<div class="save-flash" id="save-flash">Salvo</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const WEDDING_DATE = new Date('2028-05-13T18:00:00');
+const STORE_KEYS = {
+  budget:'wedding:budget',
+  guests:'wedding:guests',
+  vendors:'wedding:vendors',
+  checklist:'wedding:checklist'
+};
+
+let state = { budget:[], guests:[], vendors:[], checklist:[] };
+let loaded = false;
+
+/* ---------- sincronização em nuvem (Firebase) ---------- */
+let cloud = { db:null, unsub:null, connected:false, code:null };
+
+function loadCloudConfig(){
+  try{
+    const raw = localStorage.getItem('wedding:cloud-config');
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+function saveCloudConfig(cfg){ localStorage.setItem('wedding:cloud-config', JSON.stringify(cfg)); }
+function clearCloudConfig(){ localStorage.removeItem('wedding:cloud-config'); }
+
+function setSyncStatus(connected, message){
+  const el = document.getElementById('sync-status-line');
+  if(connected){
+    el.textContent = 'Sincronizado na nuvem';
+    el.style.color = '#bfe0c9';
+  } else {
+    el.textContent = message || 'Dados salvos neste navegador';
+    el.style.color = '';
+  }
+}
+
+function docRef(){ return cloud.db.collection('weddings').doc(cloud.code); }
+
+function connectCloud(configObj, code, silent){
+  try{
+    if(!firebase.apps.length){ firebase.initializeApp(configObj); }
+    cloud.db = firebase.firestore();
+    cloud.code = code;
+    if(cloud.unsub) cloud.unsub();
+    cloud.unsub = docRef().onSnapshot(snap=>{
+      if(snap.exists){
+        const data = snap.data();
+        if(data.budget) state.budget = data.budget;
+        if(data.guests) state.guests = data.guests;
+        if(data.vendors) state.vendors = data.vendors;
+        if(data.checklist) state.checklist = data.checklist;
+        renderBudget(); renderGuests(); renderVendors(); renderChecklist(); renderDashboard();
+      } else {
+        pushCloud();
+      }
+      cloud.connected = true;
+      setSyncStatus(true);
+    }, err=>{
+      console.error(err);
+      cloud.connected = false;
+      setSyncStatus(false, 'Não foi possível conectar — confira a configuração.');
+    });
+    saveCloudConfig({config:configObj, code});
+  }catch(e){
+    console.error(e);
+    cloud.connected = false;
+    setSyncStatus(false, 'Configuração inválida — confira o JSON colado.');
+    if(!silent) alert('Não foi possível conectar. Confira se colou o objeto de configuração correto do Firebase.');
+  }
+}
+
+function pushCloud(){
+  if(!cloud.connected || !cloud.db) return;
+  docRef().set({
+    budget: state.budget, guests: state.guests, vendors: state.vendors, checklist: state.checklist,
+    updatedAt: new Date().toISOString()
+  }, {merge:true}).catch(err=>console.error('Erro ao sincronizar', err));
+}
+
+function disconnectCloud(){
+  if(cloud.unsub) cloud.unsub();
+  cloud = { db:null, unsub:null, connected:false, code:null };
+  clearCloudConfig();
+  setSyncStatus(false);
+}
+
+function fmtBRL(n){
+  n = Number(n)||0;
+  return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+}
+function uid(){ return Math.random().toString(36).slice(2,10); }
+function fmtDate(d){
+  if(!d) return '—';
+  const [y,m,day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+
+function defaultBudget(){
+  return [
+    {id:uid(), name:'Cardápio Menu Superior II', category:'Alimentação', est:8495.00-849.50, paid:0},
+    {id:uid(), name:'Open Bar 1', category:'Bebidas', est:3295.00-329.50, paid:0},
+    {id:uid(), name:'Equipe (garçom/barman)', category:'Serviços', est:1591.65, paid:0},
+    {id:uid(), name:'Locação do espaço', category:'Serviços', est:10000.00, paid:0},
+    {id:uid(), name:'Taxa de limpeza', category:'Serviços', est:500.00, paid:0},
+    {id:uid(), name:'Taxa de segurança', category:'Serviços', est:500.00, paid:0},
+    {id:uid(), name:'Taxa de estacionamento', category:'Serviços', est:1500.00, paid:0},
+    {id:uid(), name:'Taxa de Ecad', category:'Serviços', est:1000.00, paid:1000.00},
+    {id:uid(), name:'Gerador de energia', category:'Serviços', est:2500.00, paid:0},
+    {id:uid(), name:'Decoração (Beauty Wedding)', category:'Decoração', est:9000.00, paid:0},
+    {id:uid(), name:'Entrada do contrato', category:'Pagamento', est:1000.00, paid:1000.00},
+    {id:uid(), name:'Vestido da noiva', category:'Vestuário', est:0, paid:0},
+    {id:uid(), name:'Traje do noivo', category:'Vestuário', est:0, paid:0},
+    {id:uid(), name:'Fotografia e vídeo', category:'Fotografia', est:0, paid:0},
+    {id:uid(), name:'Alianças', category:'Outros', est:0, paid:0},
+  ];
+}
+
+function defaultChecklist(){
+  return [
+    {id:uid(), name:'Escolher e confirmar o cardápio final com o buffet', due:'2028-04-13', done:false, source:'Contrato — cláusula 2c'},
+    {id:uid(), name:'Enviar número final de convidados ao buffet', due:'2028-04-13', done:false, source:'Contrato — cláusula 2b'},
+    {id:uid(), name:'Quitar o saldo final do contrato do buffet', due:'2028-04-13', done:false, source:'Contrato — cláusula 8a'},
+    {id:uid(), name:'Prazo limite para qualquer alteração no evento', due:'2028-05-06', done:false, source:'Contrato — cláusula 2b §6'},
+    {id:uid(), name:'Enviar croqui do layout de mesas ao buffet', due:'2028-04-28', done:false, source:'Contrato — cláusula 7a'},
+    {id:uid(), name:'Confirmar contratação de segurança para o evento', due:'', done:false, source:'Contrato — cláusula 6b'},
+    {id:uid(), name:'Definir e contratar cerimonialista', due:'', done:false, source:'Contrato — cláusula 7h'},
+    {id:uid(), name:'Escolher e reservar vestido de noiva', due:'', done:false, source:''},
+    {id:uid(), name:'Escolher traje do noivo', due:'', done:false, source:''},
+    {id:uid(), name:'Contratar fotografia e vídeo', due:'', done:false, source:''},
+    {id:uid(), name:'Definir lista de convidados completa', due:'', done:false, source:''},
+    {id:uid(), name:'Enviar convites', due:'', done:false, source:''},
+    {id:uid(), name:'Escolher e comprar alianças', due:'', done:false, source:''},
+    {id:uid(), name:'Definir músicas da cerimônia e festa', due:'', done:false, source:''},
+    {id:uid(), name:'Agendar prova do cardápio (degustação)', due:'', done:false, source:'Contrato — cláusula 2h'},
+  ];
+}
+
+function defaultVendors(){
+  return [
+    {id:uid(), name:'Buffet Indaiá — Canto da Lagoa', category:'Buffet/Local', contact:'(47) 98854-4227', value:20643.19, status:'pago', countsInLimit:false},
+    {id:uid(), name:'Maiara Tegner Cerimonial', category:'Cerimonialista', contact:'', value:3500.00, status:'aberto', countsInLimit:true},
+    {id:uid(), name:'Assistente 1 — equipe Maiara Tegner', category:'Cerimonialista', contact:'', value:350.00, status:'aberto', countsInLimit:true},
+    {id:uid(), name:'Assistente 2 — equipe Maiara Tegner', category:'Cerimonialista', contact:'', value:350.00, status:'aberto', countsInLimit:true},
+  ];
+}
+
+function loadState(){
+  for(const key of Object.keys(STORE_KEYS)){
+    try{
+      const raw = localStorage.getItem(STORE_KEYS[key]);
+      state[key] = raw ? JSON.parse(raw) : null;
+    }catch(e){
+      state[key] = null;
+    }
+  }
+  if(!state.budget) state.budget = defaultBudget();
+  if(!state.guests) state.guests = [];
+  if(!state.vendors) state.vendors = defaultVendors();
+  if(!state.checklist) state.checklist = defaultChecklist();
+  loaded = true;
+}
+
+function persist(key){
+  try{
+    localStorage.setItem(STORE_KEYS[key], JSON.stringify(state[key]));
+    flashSaved();
+  }catch(e){
+    console.error('Erro ao salvar', key, e);
+  }
+  if(cloud.connected) pushCloud();
+}
+
+function exportData(){
+  const data = {
+    budget: state.budget, guests: state.guests, vendors: state.vendors, checklist: state.checklist,
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'casamento-backup.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(file){
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(data.budget) state.budget = data.budget;
+      if(data.guests) state.guests = data.guests;
+      if(data.vendors) state.vendors = data.vendors;
+      if(data.checklist) state.checklist = data.checklist;
+      persist('budget'); persist('guests'); persist('vendors'); persist('checklist');
+      renderBudget(); renderGuests(); renderVendors(); renderChecklist(); renderDashboard();
+      alert('Dados importados com sucesso.');
+    }catch(err){
+      alert('Não foi possível ler esse arquivo. Confira se é um backup exportado por este mesmo painel.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+let flashTimer;
+function flashSaved(){
+  const el = document.getElementById('save-flash');
+  el.classList.add('show');
+  clearTimeout(flashTimer);
+  flashTimer = setTimeout(()=>el.classList.remove('show'), 1200);
+}
+
+/* ---------- navigation ---------- */
+document.querySelectorAll('.nav-item').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sec-'+btn.dataset.section).classList.add('active');
+  });
+});
+
+/* ---------- countdown ---------- */
+function renderCountdown(){
+  const now = new Date();
+  const diff = Math.ceil((WEDDING_DATE - now) / (1000*60*60*24));
+  document.getElementById('countdown-days').textContent = diff > 0 ? diff : 0;
+}
+
+/* ---------- dashboard ---------- */
+function renderDashboard(){
+  const totalEst = state.budget.reduce((s,i)=>s+Number(i.est||0),0);
+  const totalPaid = state.budget.reduce((s,i)=>s+Number(i.paid||0),0);
+  document.getElementById('dash-budget-paid').textContent = fmtBRL(totalPaid) + ' de ' + fmtBRL(totalEst);
+  document.getElementById('dash-budget-bar').style.width = (totalEst? Math.min(100,totalPaid/totalEst*100):0)+'%';
+
+  const totalGuests = state.guests.length;
+  const confirmed = state.guests.filter(g=>g.status==='confirmado').length;
+  document.getElementById('dash-guests-confirmed').textContent = confirmed+' / '+totalGuests;
+  document.getElementById('dash-guests-bar').style.width = (totalGuests? confirmed/totalGuests*100:0)+'%';
+
+  const totalTasks = state.checklist.length;
+  const doneTasks = state.checklist.filter(t=>t.done).length;
+  document.getElementById('dash-checklist-done').textContent = doneTasks+' / '+totalTasks;
+  document.getElementById('dash-checklist-bar').style.width = (totalTasks? doneTasks/totalTasks*100:0)+'%';
+
+  const totalVendors = state.vendors.length;
+  const closedVendors = state.vendors.filter(v=>v.status==='pago' || v.status==='parcial').length;
+  document.getElementById('dash-vendors').textContent = closedVendors+' / '+totalVendors;
+
+  const upcoming = state.checklist
+    .filter(t=>!t.done)
+    .sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'))
+    .slice(0,6);
+  const taskWrap = document.getElementById('dash-tasks');
+  taskWrap.innerHTML = upcoming.length ? upcoming.map(t=>`
+    <div class="task-row">
+      <div class="task-date">${t.due?fmtDate(t.due):'sem data'}</div>
+      <div class="task-name">${t.name}</div>
+    </div>
+  `).join('') : '<div class="empty">Nenhuma tarefa pendente</div>';
+
+  const deadlines = state.checklist.filter(t=>t.source && t.source.startsWith('Contrato'));
+  const dWrap = document.getElementById('dash-deadlines');
+  dWrap.innerHTML = deadlines.length ? deadlines.map(t=>`
+    <div class="task-row">
+      <div class="task-date">${t.due?fmtDate(t.due):'—'}</div>
+      <div class="task-name">${t.name}${t.done?' <span class="tag lake">feito</span>':''}</div>
+    </div>
+  `).join('') : '<div class="empty">Nenhum prazo contratual cadastrado</div>';
+}
+
+/* ---------- orcamento ---------- */
+const CATS = ['Alimentação','Bebidas','Serviços','Decoração','Pagamento','Vestuário','Fotografia','Convites','Música','Outros'];
+
+function budgetStatus(item){
+  if(item.paid<=0) return 'aberto';
+  if(item.paid>=item.est && item.est>0) return 'pago';
+  return 'parcial';
+}
+function renderBudget(){
+  const tbody = document.getElementById('budget-tbody');
+  if(!state.budget.length){
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty">Nenhum item ainda — adicione o primeiro.</div></td></tr>';
+  } else {
+    tbody.innerHTML = state.budget.map(item=>{
+      const st = budgetStatus(item);
+      return `<tr>
+        <td>${item.name}</td>
+        <td>${item.category||'—'}</td>
+        <td class="num">${fmtBRL(item.est)}</td>
+        <td class="num">${fmtBRL(item.paid)}</td>
+        <td><span class="status-pill status-${st}">${st==='pago'?'Pago':st==='parcial'?'Parcial':'Em aberto'}</span></td>
+        <td class="row-actions">
+          <button class="btn ghost small" onclick="editBudget('${item.id}')">Editar</button>
+          <button class="btn danger small" onclick="deleteBudget('${item.id}')">Excluir</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+  const totalEst = state.budget.reduce((s,i)=>s+Number(i.est||0),0);
+  const totalPaid = state.budget.reduce((s,i)=>s+Number(i.paid||0),0);
+  document.getElementById('bud-total-est').textContent = fmtBRL(totalEst);
+  document.getElementById('bud-total-paid').textContent = fmtBRL(totalPaid);
+  document.getElementById('bud-total-open').textContent = fmtBRL(totalEst-totalPaid);
+}
+
+function openBudgetModal(item){
+  const isEdit = !!item;
+  item = item || {id:uid(), name:'', category:CATS[0], est:0, paid:0};
+  const catOptions = CATS.map(c=>`<option value="${c}" ${c===item.category?'selected':''}>${c}</option>`).join('');
+  showModal(`
+    <h3>${isEdit?'Editar item':'Novo item do orçamento'}</h3>
+    <div class="field"><label>Nome do item</label><input type="text" id="f-name" value="${item.name}" placeholder="Ex: Buquê da noiva"></div>
+    <div class="field"><label>Categoria</label><select id="f-cat">${catOptions}</select></div>
+    <div class="field"><label>Valor estimado (R$)</label><input type="number" id="f-est" value="${item.est}" step="0.01"></div>
+    <div class="field"><label>Valor já pago (R$)</label><input type="number" id="f-paid" value="${item.paid}" step="0.01"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="saveBudget('${item.id}', ${isEdit})">Salvar</button>
+    </div>
+  `);
+}
+window.editBudget = function(id){ openBudgetModal(state.budget.find(i=>i.id===id)); };
+window.deleteBudget = function(id){
+  state.budget = state.budget.filter(i=>i.id!==id);
+  persist('budget'); renderBudget(); renderDashboard();
+};
+window.saveBudget = function(id, isEdit){
+  const name = document.getElementById('f-name').value.trim();
+  if(!name){ alert('Digite um nome para o item.'); return; }
+  const data = {
+    id, name,
+    category: document.getElementById('f-cat').value,
+    est: parseFloat(document.getElementById('f-est').value)||0,
+    paid: parseFloat(document.getElementById('f-paid').value)||0,
+  };
+  if(isEdit){
+    state.budget = state.budget.map(i=>i.id===id?data:i);
+  } else {
+    state.budget.push(data);
+  }
+  persist('budget'); renderBudget(); renderDashboard(); closeModal();
+};
+document.getElementById('btn-add-budget').addEventListener('click', ()=>openBudgetModal(null));
+
+/* ---------- convidados ---------- */
+function renderGuests(){
+  const tbody = document.getElementById('guests-tbody');
+  if(!state.guests.length){
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty">Nenhum convidado ainda — adicione o primeiro.</div></td></tr>';
+  } else {
+    tbody.innerHTML = state.guests.map(g=>`
+      <tr>
+        <td>${g.name}</td>
+        <td>${g.group||'—'}</td>
+        <td><span class="status-pill status-${g.status}">${g.status==='confirmado'?'Confirmado':g.status==='recusado'?'Recusado':'Pendente'}</span></td>
+        <td>${g.table||'—'}</td>
+        <td class="row-actions">
+          <button class="btn ghost small" onclick="editGuest('${g.id}')">Editar</button>
+          <button class="btn danger small" onclick="deleteGuest('${g.id}')">Excluir</button>
+        </td>
+      </tr>`).join('');
+  }
+  const total = state.guests.length;
+  const confirmed = state.guests.filter(g=>g.status==='confirmado').length;
+  const pending = state.guests.filter(g=>g.status==='pendente').length;
+  const declined = state.guests.filter(g=>g.status==='recusado').length;
+  document.getElementById('g-total').textContent = total;
+  document.getElementById('g-confirmed').textContent = confirmed;
+  document.getElementById('g-pending').textContent = pending;
+  document.getElementById('g-declined').textContent = declined;
+
+  const staffCount = state.vendors.filter(v=>v.countsInLimit).length;
+  const totalVsLimit = confirmed + staffCount;
+  document.getElementById('g-vs-limit').textContent = totalVsLimit + ' / 50';
+
+  const warnBox = document.getElementById('guest-warning');
+  if(totalVsLimit > 50){
+    warnBox.style.display='block';
+    warnBox.textContent = `Atenção: ${confirmed} convidados confirmados + ${staffCount} da equipe presente (cerimonialista, assistentes etc.) somam ${totalVsLimit} — isso passa do limite de 50 do contrato e pode gerar cobrança adicional (cláusula 2b).`;
+  } else if(totalVsLimit >= 45){
+    warnBox.style.display='block';
+    warnBox.textContent = `Você está em ${totalVsLimit} de 50 (convidados confirmados + equipe presente como cerimonialista e assistentes). Ainda dá margem, mas vale acompanhar de perto.`;
+  } else {
+    warnBox.style.display='none';
+  }
+}
+function openGuestModal(g){
+  const isEdit = !!g;
+  g = g || {id:uid(), name:'', group:'', status:'pendente', table:''};
+  showModal(`
+    <h3>${isEdit?'Editar convidado':'Novo convidado'}</h3>
+    <div class="field"><label>Nome</label><input type="text" id="f-gname" value="${g.name}" placeholder="Ex: Amabilly Trilha"></div>
+    <div class="field"><label>Grupo</label><input type="text" id="f-ggroup" value="${g.group}" placeholder="Ex: Família da noiva, amigos do trabalho"></div>
+    <div class="field"><label>Status</label>
+      <select id="f-gstatus">
+        <option value="pendente" ${g.status==='pendente'?'selected':''}>Pendente</option>
+        <option value="confirmado" ${g.status==='confirmado'?'selected':''}>Confirmado</option>
+        <option value="recusado" ${g.status==='recusado'?'selected':''}>Recusado</option>
+      </select>
+    </div>
+    <div class="field"><label>Mesa</label><input type="text" id="f-gtable" value="${g.table}" placeholder="Ex: Mesa 4"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="saveGuest('${g.id}', ${isEdit})">Salvar</button>
+    </div>
+  `);
+}
+window.editGuest = function(id){ openGuestModal(state.guests.find(g=>g.id===id)); };
+window.deleteGuest = function(id){
+  state.guests = state.guests.filter(g=>g.id!==id);
+  persist('guests'); renderGuests(); renderDashboard();
+};
+window.saveGuest = function(id, isEdit){
+  const name = document.getElementById('f-gname').value.trim();
+  if(!name){ alert('Digite o nome do convidado.'); return; }
+  const data = {
+    id, name,
+    group: document.getElementById('f-ggroup').value.trim(),
+    status: document.getElementById('f-gstatus').value,
+    table: document.getElementById('f-gtable').value.trim(),
+  };
+  if(isEdit) state.guests = state.guests.map(g=>g.id===id?data:g);
+  else state.guests.push(data);
+  persist('guests'); renderGuests(); renderDashboard(); closeModal();
+};
+document.getElementById('btn-add-guest').addEventListener('click', ()=>openGuestModal(null));
+
+/* ---------- fornecedores ---------- */
+function renderVendors(){
+  const tbody = document.getElementById('vendors-tbody');
+  if(!state.vendors.length){
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty">Nenhum fornecedor ainda.</div></td></tr>';
+  } else {
+    tbody.innerHTML = state.vendors.map(v=>`
+      <tr>
+        <td>${v.name}</td>
+        <td>${v.category||'—'}</td>
+        <td>${v.contact||'—'}</td>
+        <td class="num">${fmtBRL(v.value)}</td>
+        <td><span class="status-pill status-${v.status}">${v.status==='pago'?'Pago':v.status==='parcial'?'Parcial':'Em aberto'}</span></td>
+        <td>${v.countsInLimit?'<span class="tag rose">Sim</span>':'<span class="tag lake">Não</span>'}</td>
+        <td class="row-actions">
+          <button class="btn ghost small" onclick="editVendor('${v.id}')">Editar</button>
+          <button class="btn danger small" onclick="deleteVendor('${v.id}')">Excluir</button>
+        </td>
+      </tr>`).join('');
+  }
+}
+function openVendorModal(v){
+  const isEdit = !!v;
+  v = v || {id:uid(), name:'', category:'', contact:'', value:0, status:'aberto', countsInLimit:false};
+  showModal(`
+    <h3>${isEdit?'Editar fornecedor':'Novo fornecedor'}</h3>
+    <div class="field"><label>Nome</label><input type="text" id="f-vname" value="${v.name}" placeholder="Ex: Fotógrafo João"></div>
+    <div class="field"><label>Categoria</label><input type="text" id="f-vcat" value="${v.category}" placeholder="Ex: Fotografia"></div>
+    <div class="field"><label>Contato</label><input type="text" id="f-vcontact" value="${v.contact}" placeholder="Telefone ou e-mail"></div>
+    <div class="field"><label>Valor combinado (R$)</label><input type="number" id="f-vvalue" value="${v.value}" step="0.01"></div>
+    <div class="field"><label>Status</label>
+      <select id="f-vstatus">
+        <option value="aberto" ${v.status==='aberto'?'selected':''}>Em aberto</option>
+        <option value="parcial" ${v.status==='parcial'?'selected':''}>Parcial</option>
+        <option value="pago" ${v.status==='pago'?'selected':''}>Pago</option>
+      </select>
+    </div>
+    <div class="field checkbox-row"><input type="checkbox" id="f-vcounts" ${v.countsInLimit?'checked':''}><label style="margin:0;">Fica presente no evento (conta no limite de 50 do contrato)</label></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="saveVendor('${v.id}', ${isEdit})">Salvar</button>
+    </div>
+  `);
+}
+window.editVendor = function(id){ openVendorModal(state.vendors.find(v=>v.id===id)); };
+window.deleteVendor = function(id){
+  state.vendors = state.vendors.filter(v=>v.id!==id);
+  persist('vendors'); renderVendors(); renderDashboard();
+};
+window.saveVendor = function(id, isEdit){
+  const name = document.getElementById('f-vname').value.trim();
+  if(!name){ alert('Digite o nome do fornecedor.'); return; }
+  const data = {
+    id, name,
+    category: document.getElementById('f-vcat').value.trim(),
+    contact: document.getElementById('f-vcontact').value.trim(),
+    value: parseFloat(document.getElementById('f-vvalue').value)||0,
+    status: document.getElementById('f-vstatus').value,
+    countsInLimit: document.getElementById('f-vcounts').checked,
+  };
+  if(isEdit) state.vendors = state.vendors.map(v=>v.id===id?data:v);
+  else state.vendors.push(data);
+  persist('vendors'); renderVendors(); renderDashboard(); closeModal();
+};
+document.getElementById('btn-add-vendor').addEventListener('click', ()=>openVendorModal(null));
+
+/* ---------- checklist ---------- */
+function renderChecklist(){
+  const wrap = document.getElementById('checklist-list');
+  if(!state.checklist.length){
+    wrap.innerHTML = '<div class="empty">Nenhuma tarefa ainda.</div>';
+    return;
+  }
+  const sorted = [...state.checklist].sort((a,b)=>{
+    if(a.done!==b.done) return a.done?1:-1;
+    return (a.due||'9999').localeCompare(b.due||'9999');
+  });
+  wrap.innerHTML = `<table><tbody>` + sorted.map(t=>`
+    <tr>
+      <td style="width:34px;"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask('${t.id}')"></td>
+      <td style="${t.done?'text-decoration:line-through;color:var(--muted);':''}">${t.name}${t.source?` <span class="tag ${t.source.startsWith('Contrato')?'rose':'lake'}">${t.source}</span>`:''}</td>
+      <td style="width:110px;color:var(--muted);font-size:12.5px;">${t.due?fmtDate(t.due):'sem prazo'}</td>
+      <td class="row-actions" style="width:140px;">
+        <button class="btn ghost small" onclick="editTask('${t.id}')">Editar</button>
+        <button class="btn danger small" onclick="deleteTask('${t.id}')">Excluir</button>
+      </td>
+    </tr>
+  `).join('') + `</tbody></table>`;
+}
+window.toggleTask = function(id){
+  state.checklist = state.checklist.map(t=>t.id===id?{...t,done:!t.done}:t);
+  persist('checklist'); renderChecklist(); renderDashboard();
+};
+function openTaskModal(t){
+  const isEdit = !!t;
+  t = t || {id:uid(), name:'', due:'', done:false, source:''};
+  showModal(`
+    <h3>${isEdit?'Editar tarefa':'Nova tarefa'}</h3>
+    <div class="field"><label>Tarefa</label><input type="text" id="f-tname" value="${t.name}" placeholder="Ex: Provar o bolo de casamento"></div>
+    <div class="field"><label>Prazo (opcional)</label><input type="date" id="f-tdue" value="${t.due}"></div>
+    <div class="field checkbox-row"><input type="checkbox" id="f-tdone" ${t.done?'checked':''}><label style="margin:0;">Já concluída</label></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn" onclick="saveTask('${t.id}', ${isEdit}, '${(t.source||'').replace(/'/g,"\\'")}')">Salvar</button>
+    </div>
+  `);
+}
+window.editTask = function(id){ openTaskModal(state.checklist.find(t=>t.id===id)); };
+window.deleteTask = function(id){
+  state.checklist = state.checklist.filter(t=>t.id!==id);
+  persist('checklist'); renderChecklist(); renderDashboard();
+};
+window.saveTask = function(id, isEdit, source){
+  const name = document.getElementById('f-tname').value.trim();
+  if(!name){ alert('Digite o nome da tarefa.'); return; }
+  const data = {
+    id, name,
+    due: document.getElementById('f-tdue').value,
+    done: document.getElementById('f-tdone').checked,
+    source
+  };
+  if(isEdit) state.checklist = state.checklist.map(t=>t.id===id?data:t);
+  else state.checklist.push(data);
+  persist('checklist'); renderChecklist(); renderDashboard(); closeModal();
+};
+document.getElementById('btn-add-task').addEventListener('click', ()=>openTaskModal(null));
+
+/* ---------- modal de sincronização ---------- */
+function openSyncModal(){
+  const cfg = loadCloudConfig();
+  showModal(`
+    <h3>Sincronizar entre aparelhos</h3>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 14px;">
+      Cole aqui a configuração do seu projeto Firebase (gratuito) e escolha um código só seu.
+      Veja o passo a passo no README do site. Uma vez configurado neste aparelho, ele lembra sozinho.
+    </p>
+    <div class="field">
+      <label>Configuração do Firebase (objeto firebaseConfig)</label>
+      <textarea id="f-fbconfig" rows="6" style="width:100%;font-family:monospace;font-size:12px;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface);color:var(--ink);" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}'>${cfg?JSON.stringify(cfg.config,null,2):''}</textarea>
+    </div>
+    <div class="field">
+      <label>Código do casamento (uma senha só sua, mesma em todos os aparelhos)</label>
+      <input type="text" id="f-fbcode" value="${cfg?cfg.code:''}" placeholder="Ex: amabilly-gabriel-2028-xyz">
+    </div>
+    <div class="modal-actions" style="justify-content:space-between;">
+      <button class="btn danger" onclick="handleDisconnect()">Desconectar</button>
+      <div style="display:flex;gap:10px;">
+        <button class="btn ghost" onclick="closeModal()">Fechar</button>
+        <button class="btn" onclick="handleConnect()">Conectar</button>
+      </div>
+    </div>
+  `);
+}
+window.handleConnect = function(){
+  const raw = document.getElementById('f-fbconfig').value.trim();
+  const code = document.getElementById('f-fbcode').value.trim();
+  if(!raw || !code){ alert('Cole a configuração do Firebase e escolha um código.'); return; }
+  let parsed;
+  try{ parsed = JSON.parse(raw); }
+  catch(e){ alert('A configuração colada não é um JSON válido. Confira se copiou o objeto inteiro.'); return; }
+  connectCloud(parsed, code, false);
+  closeModal();
+};
+window.handleDisconnect = function(){
+  disconnectCloud();
+  closeModal();
+};
+document.getElementById('btn-sync').addEventListener('click', openSyncModal);
+
+/* ---------- modal helpers ---------- */
+function showModal(html){
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-backdrop').classList.add('open');
+}
+window.closeModal = function(){
+  document.getElementById('modal-backdrop').classList.remove('open');
+};
+document.getElementById('modal-backdrop').addEventListener('click', (e)=>{
+  if(e.target.id==='modal-backdrop') closeModal();
+});
+
+/* ---------- init ---------- */
+function init(){
+  renderCountdown();
+  setInterval(renderCountdown, 1000*60*60);
+  loadState();
+  renderBudget();
+  renderGuests();
+  renderVendors();
+  renderChecklist();
+  renderDashboard();
+
+  const savedCloud = loadCloudConfig();
+  if(savedCloud){ connectCloud(savedCloud.config, savedCloud.code, true); }
+
+  document.getElementById('btn-export').addEventListener('click', exportData);
+  document.getElementById('btn-import').addEventListener('click', ()=>document.getElementById('file-import').click());
+  document.getElementById('file-import').addEventListener('change', (e)=>{
+    if(e.target.files[0]) importData(e.target.files[0]);
+  });
+}
+init();
+</script>
+</body>
+</html>
